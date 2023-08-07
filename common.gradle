@@ -1,9 +1,7 @@
 apply plugin: 'maven-publish'
-apply plugin: 'com.github.hierynomus.license'
 apply plugin: 'fabric-loom'
 apply plugin: 'io.github.juuxel.loom-quiltflower'
 apply plugin: 'com.replaymod.preprocess'
-apply plugin: 'me.fallenbreath.yamlang'
 
 int mcVersion = project.mcVersion
 
@@ -53,6 +51,13 @@ remapJar {
 	remapperIsolation = true
 }
 
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+
+/*
+//Use if you want to have different java versions for the mod. I use around the same for them all.
 if (mcVersion >= 11800) {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
@@ -62,7 +67,7 @@ if (mcVersion >= 11800) {
 } else {
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
-}
+}*/
 
 String versionSuffix = ''
 // detect github action environment variables
@@ -96,11 +101,7 @@ processResources {
 	}
 }
 
-// https://github.com/Fallen-Breath/yamlang
-yamlang {
-	targetSourceSets = [sourceSets.main]
-	inputDir = 'assets/template_mod/lang'
-}
+
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
@@ -123,40 +124,7 @@ jar {
 	}
 }
 
-// https://github.com/hierynomus/license-gradle-plugin
-license {
-	// use "gradle licenseFormat" to apply license headers
-	header = rootProject.file('HEADER.txt')
-	include '**/*.java'
-	skipExistingHeaders = true
 
-	headerDefinitions {
-		// ref: https://github.com/mathieucarbou/license-maven-plugin/blob/4c42374bb737378f5022a3a36849d5e23ac326ea/license-maven-plugin/src/main/java/com/mycila/maven/plugin/license/header/HeaderType.java#L48
-		// modification: add a newline at the end
-		SLASHSTAR_STYLE_NEWLINE {
-			firstLine = "/*"
-			beforeEachLine = " * "
-			endLine = " */" + System.lineSeparator()
-			afterEachLine = ""
-			skipLinePattern = null
-			firstLineDetectionPattern = "(\\s|\\t)*/\\*.*\$"
-			lastLineDetectionPattern = ".*\\*/(\\s|\\t)*\$"
-			allowBlankLines = false
-			isMultiline = true
-			padLines = false
-		}
-	}
-	mapping {
-		java = 'SLASHSTAR_STYLE_NEWLINE'
-	}
-	ext {
-		name = project.mod_name
-		author = 'Fallen_Breath'
-		year = Calendar.getInstance().get(Calendar.YEAR).toString()
-	}
-}
-classes.dependsOn licenseFormatMain
-testClasses.dependsOn licenseFormatTest
 
 // configure the maven publication
 publishing {
