@@ -74,7 +74,7 @@ String versionSuffix = ''
 // https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 if (System.getenv("BUILD_RELEASE") != "true") {
 	String buildNumber = System.getenv("BUILD_ID")
-	versionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SHAPSHOT'
+	versionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
 }
 String fullModVersion = project.mod_version + versionSuffix
 
@@ -138,7 +138,18 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		// uncomment to publish to the local maven
 		// mavenLocal()
+
+		
+		// maven {
+		// 	url = version.endsWith("SNAPSHOT") ? "https://maven.lemonlime.tech/snapshots" : "https://maven.lemonlime.tech/releases"
+		// 	credentials(PasswordCredentials) {
+		// 		username = 'jack'
+		// 		password = System.getenv("JACKS_MAVEN_TOKEN")
+		// 	}
+		// 	authentication {
+		// 		basic(BasicAuthentication)
+		// 	}
+		// }
 	}
 }
